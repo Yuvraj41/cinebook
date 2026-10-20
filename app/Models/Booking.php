@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+use App\Models\BookingSeat;
+use App\Models\User;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Booking extends Model
+{
+    protected $fillable = [
+    'user_id',
+    'show_id',
+    'total_price',
+    'status',
+    'razorpay_order_id',
+    'razorpay_payment_id',
+];
+
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
+public function seats()
+{
+    return $this->hasMany(BookingSeat::class);
+}
+
+public function show()
+{
+    return $this->belongsTo(Show::class);
+}
+}
