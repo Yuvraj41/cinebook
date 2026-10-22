@@ -137,5 +137,6 @@
         @endforelse
 
     </section>
+    @include('chatbot.widget')
 
 @endsection

@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieController;
@@ -10,6 +11,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\AdminShowController;
+use App\Http\Controllers\ChatbotController;
+
 
 // Homepage
 Route::get('/', function () {
@@ -127,4 +130,16 @@ Route::middleware('auth')->group(function () {
         Route::delete('/admin/shows/{show}', [ShowController::class, 'destroy'])
             ->name('admin.shows.destroy');
     });
+
+    Route::get('/test-gemini-config', function () {
+    return response()->json([
+        'configured' => !empty(config('services.gemini.api_key')),
+    ]);})->middleware('auth');
+
+
+Route::get('/chatbot', [ChatbotController::class, 'index'])
+    ->name('chatbot.index');
+
+Route::post('/chatbot/message', [ChatbotController::class, 'chat'])
+    ->name('chatbot.chat');
 });
