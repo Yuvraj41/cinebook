@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\AdminShowController;
 use App\Http\Controllers\ChatbotController;
+use App\Jobs\SendBookingConfirmation;
 
 
 // Homepage
@@ -142,4 +143,12 @@ Route::get('/chatbot', [ChatbotController::class, 'index'])
 
 Route::post('/chatbot/message', [ChatbotController::class, 'chat'])
     ->name('chatbot.chat');
+
+    
+
+Route::get('/test-redis-queue', function () {
+    SendBookingConfirmation::dispatch();
+
+    return 'Job dispatched to Redis!';
+});
 });

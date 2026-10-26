@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class MovieController extends Controller
 {
     // Display all movies
     public function index()
     {
-        $movies = Movie::latest()->get();
+        $movies = Cache::remember('movies.index',60,function(){
+         return Movie::latest()->get();
+        });
 
         return view('movies.index', compact('movies'));
     }
@@ -42,6 +45,7 @@ class MovieController extends Controller
         unset($validated['poster']);
 
         Movie::create($validated);
+        Cache::forget('movies.index');
 
         return redirect()->route('movies.index')
             ->with('success', 'Movie added successfully!');
@@ -75,6 +79,7 @@ class MovieController extends Controller
         unset($validated['poster']);
 
         $movie->update($validated);
+        Cache::forget('movies.index');
 
         return redirect()->route('movies.index')
             ->with('success', 'Movie updated successfully!');
@@ -88,6 +93,7 @@ class MovieController extends Controller
     }
 
     $movie->delete();
+    Cache::forget('movies.index');
 
     return redirect()->route('movies.index')
         ->with('success', 'Movie deleted successfully!');

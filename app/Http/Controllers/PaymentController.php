@@ -5,6 +5,7 @@ use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Razorpay\Api\Api;
+use App\Jobs\SendBookingConfirmation;
 
 class PaymentController extends Controller
 {
@@ -157,6 +158,7 @@ class PaymentController extends Controller
                     $validated['razorpay_payment_id'],
             ]);
         });
+        SendBookingConfirmation::dispatch($booking->id);
 
         // Return JSON AFTER the transaction succeeds.
         return response()->json([
